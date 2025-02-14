@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chandu</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Global Styles */
+      body {
+        margin: 0;
+        font-family: "Poppins", sans-serif;
+        overflow: hidden;
+      }
+      .page-section {
+        width: 100vw;
+        height: 100vh;
+        position: relative;
+      }
+      /* -------------------- */
+      /* Login Page Styles */
+      /* -------------------- */
+      #page-login {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ff758c, #ff7eb3);
+      }
+      #page-login #login-form {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 30px 40px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        animation: fadeIn 1s ease-in-out;
+        position: relative;
+        z-index: 10;
+      }
+      #page-login label {
+        font-size: 20px;
+        color: white;
+        font-weight: 600;
+        margin-bottom: 10px;
+      }
+      #page-login input {
+        width: 100%;
+        padding: 15px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        text-align: center;
+        background: rgba(255, 255, 255, 0.7);
+        color: #333;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: background 0.3s ease;
+      }
+      #page-login input:focus {
+        background: rgba(255, 255, 255, 0.9);
+        outline: none;
+        box-shadow: 0 0 8px rgba(255, 77, 121, 0.7);
+      }
+      #page-login button {
+        background: #ff4d79;
+        color: white;
+        border: none;
+        padding: 12px 25px;
+        font-size: 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 15px;
+      }
+      #page-login button:hover {
+        background: #ff2357;
+        transform: scale(1.1);
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Falling emojis (used in both login & loading pages) */
+      .falling-emoji {
+        position: absolute;
+        font-size: 2em;
+        top: -50px;
+        animation: fall linear infinite;
+      }
+      @keyframes fall {
+        from {
+          transform: translateY(-50px);
+        }
+        to {
+          transform: translateY(100vh);
+        }
+      }
+
+      /* -------------------- */
+      /* Loading Page Styles */
+      /* -------------------- */
+      #page-loading {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+        color: #fff;
+      }
+      #page-loading .container {
+        text-align: center;
+        position: relative;
+        padding: 20px;
+        border: 5px solid white;
+        border-radius: 15px;
+        background: rgba(255, 255, 255, 0.2);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+      }
+      #page-loading .loading-text {
+        font-size: 2em;
+        font-weight: bold;
+        background: linear-gradient(135deg, #ff4d6d, #ff7f7f);
+        padding: 15px 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        color: white;
+      }
+      #page-loading .subtext {
+        font-size: 1em;
+        margin-top: 10px;
+        opacity: 0.8;
+        color: #333;
+      }
+      #page-loading .progress-bar {
+        width: 200px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50px;
+        overflow: hidden;
+        margin: 20px auto;
+        position: relative;
+      }
+      #page-loading .progress {
+        width: 0%;
+        height: 100%;
+        background: #ff4d6d;
+        border-radius: 50px;
+        animation: load 3s ease-in-out forwards;
+      }
+      @keyframes load {
+        0% {
+          width: 0%;
+        }
+        100% {
+          width: 100%;
+        }
+      }
+      #page-loading .heart {
+        width: 80px;
+        height: 80px;
+        margin-top: 20px;
+        animation: heartbeat 1.5s infinite ease-in-out;
+      }
+      @keyframes heartbeat {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.2);
+        }
+      }
+      #page-loading .next-btn {
+        background: linear-gradient(135deg, #ff4d6d, #ff7f7f);
+        border: none;
+        padding: 12px 25px;
+        color: white;
+        font-size: 1em;
+        cursor: pointer;
+        border-radius: 50px;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0 4px 10px rgba(255, 255, 255, 0.3);
+        margin-top: 20px;
+        backdrop-filter: blur(10px);
+      }
+      #page-loading .next-btn:hover {
+        background: linear-gradient(135deg, #ff7f7f, #ff4d6d);
+        transform: scale(1.1);
+      }
+
+      /* -------------------- */
+      /* Book (Flip-Book) Page Styles */
+      /* -------------------- */
+      #page-book {
+        display: none;
+        background-image: radial-gradient(
+          circle farthest-corner at 50% 50%,
+          hsl(187 20% 88%) 30%,
+          hsl(149 20% 94%) 100%
+        );
+        overflow: hidden;
+        color: hsl(180 68% 5%);
+        perspective: 1000px;
+      }
+      #page-book .book {
+        position: relative;
+        display: flex;
+        margin: auto;
+        width: 42cqmin;
+        pointer-events: none;
+        transform-style: preserve-3d;
+        transition: translate 1s;
+        translate: calc(min(var(--c), 1) * 50%) 0%;
+        rotate: 1 0 0 30deg;
+        counter-reset: page -1;
+      }
+      #page-book .page {
+        --thickness: 4;
+        flex: none;
+        display: flex;
+        width: 100%;
+        font-size: 2.2cqmin;
+        pointer-events: all;
+        user-select: none;
+        transform-style: preserve-3d;
+        transform-origin: left center;
+        transition: transform 1s,
+          rotate 1s ease-in
+            calc((min(var(--i), var(--c)) - max(var(--i), var(--c))) * 50ms);
+        translate: calc(var(--i) * -100%) 0 0;
+        transform: translateZ(
+          calc((var(--c) - var(--i) - 0.5) * calc(var(--thickness) * 0.23cqmin))
+        );
+        rotate: 0 1 0 calc(clamp(0, var(--c) - var(--i), 1) * -180deg);
+      }
+      #page-book .front,
+      #page-book .back {
+        position: relative;
+        flex: none;
+        width: 100%;
+        backface-visibility: hidden;
+        overflow: hidden;
+        background-color: #fff;
+        translate: 0;
+      }
+      #page-book .back {
+        translate: -100% 0;
+        rotate: 0 1 0 180deg;
+      }
+      #page-book .book a {
+        color: inherit;
+      }
+      #page-book .page {
+        box-shadow: 0em 0.5em 1em -0.2em #00000020;
+      }
+      #page-book .front,
+      #page-book .back {
+        display: flex;
+        flex-flow: column wrap;
+        justify-content: space-between;
+        padding: 2em;
+        border: 1px solid #0002;
+      }
+      #page-book .front:has(img),
+      #page-book .back:has(img) {
+        padding: 0;
+      }
+      #page-book .front img,
+      #page-book .back img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      #page-book .front::after,
+      #page-book .back::after {
+        position: absolute;
+        bottom: 1em;
+        counter-increment: page;
+        content: counter(page) ".";
+        font-size: 0.8em;
+      }
+      #page-book .cover::after {
+        content: "";
+      }
+      #page-book .front::after {
+        right: 1em;
+      }
+      #page-book .front {
+        background: linear-gradient(to left, #f7f7f7 80%, #eee 100%);
+        border-radius: 0.1em 0.5em 0.5em 0.1em;
+      }
+      #page-book .back::after {
+        left: 1em;
+      }
+      #page-book .back {
+        background-image: linear-gradient(to right, #f7f7f7 80%, #eee 100%);
+        border-radius: 0.5em 0.1em 0.1em 0.5em;
+      }
+      #page-book h1,
+      #page-book h2,
+      #page-book h3 {
+        margin-bottom: 1px;
+        color: hsl(0, 100%, 30%);
+      }
+      #page-book p {
+        margin-top: 1px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+        color: hsl(0, 100%, 30%);
+      }
+      #page-book .front,
+      #page-book .back {
+        padding: 1.5em;
+        color: hsl(0, 100%, 30%);
+      }
+      #page-book .book {
+        width: 40cqmin;
+      }
+      #page-book .page {
+        font-size: 2cqmin;
+      }
+      #page-book p:last-child {
+        margin-bottom: 0;
+      }
+      #page-book .front,
+      #page-book .back {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 1.5em;
+      }
+      #page-book h2 {
+        margin-bottom: 5px;
+      }
+      #page-book p {
+        margin-top: 5px;
+        line-height: 1.4;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Login Page -->
+    <div id="page-login" class="page-section">
+      <form id="login-form">
+        <label for="code">Enter Your Name:</label>
+        <input type="text" id="code" name="code" placeholder="Your Name" />
+        <button id="submit-btn" type="submit">Login</button>
+      </form>
+      <div id="login-result"></div>
+    </div>
+
+    <!-- Loading Page -->
+    <div id="page-loading" class="page-section">
+      <div class="container">
+        <div class="loading-text">Loading Book...</div>
+        <div class="subtext">Get ready for the cutest moment! 💖</div>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <img
+          class="heart"
+          src="https://static.vecteezy.com/system/resources/thumbnails/017/419/333/small/3d-illustration-of-a-shiny-heart-symbol-of-love-and-romance-png.png"
+          alt="Heart"
+        />
+        <button class="next-btn" id="next-btn">NEXT →</button>
+      </div>
+    </div>
+
+    <!-- Book Page (Flip-Book) -->
+    <div id="page-book" class="page-section">
+      <div class="book">
+        <!-- 1st Page -->
+        <div class="page">
+          <div class="front cover">
+            <h1 style="color: hsl(0, 100%, 30%)">A Message for You❤️</h1>
+            <p style="color: hsl(0, 100%, 30%)"><br />Sahaja</p>
+          </div>
+          <div class="back">
+            <h2>A Special Beginning ❤️✨</h2>
+            <p>
+              Some people come into our lives unexpectedly, yet leave a lasting
+              impact. You are one of those rare souls who make every moment feel
+              a little more special.
+              <br /><br />
+              From the very first conversation, something about you stood
+              out—your kindness, your charm, and the effortless way you make the
+              world around you brighter.
+              <br /><br />
+              This isn’t just a collection of words; it’s a small way of showing
+              how much you mean to me. A way to remind you that you are
+              appreciated, admired, and truly special.
+              <br /><br />
+              So, here’s to us—our conversations, our connection, and the
+              beautiful moments yet to come. 💖
+            </p>
+            <p><br />Since we connect in Instagram on June, 2022, ....</p>
+          </div>
+        </div>
+        <!-- 2nd Page -->
+        <div class="page">
+          <div class="front">
+            <h2>From Strangers to Something Special ❤️✨</h2>
+            <p>
+              It’s incredible to think how, just a few months ago, I didn’t even
+              know you. Meeting you through instagram was a moment of fate that
+              I’ll always be grateful for.
+              <br /><br />
+              At first, I wasn’t sure how we’d connect, what we’d talk about, or
+              what kind of person you’d be. But now, after spending time with
+              you, I’ve realized something truly special—
+              <br /><br />
+              You’re absolutely amazing. 💖
+              <br /><br />
+              Maybe it was destiny, or maybe it was just luck—but whatever it
+              was, I’m glad it brought me to you. 💕
+            </p>
+          </div>
+          <div class="back">
+            <img src="./img2.jpeg" alt="Img2" />
+          </div>
+        </div>
+        <!-- 3rd Page -->
+        <div class="page">
+          <div class="front">
+            <h2>The Magic of You ✨💖</h2>
+            <p>
+              There’s a charm about you, a beauty that words can hardly capture.
+              It’s in the sparkle of your eyes, the warmth of your smile, and
+              the effortless way you light up every moment. Every little thing
+              about you feels so perfect, so mesmerizing, that I often wonder—
+              <br /><br />
+              Were you crafted as a masterpiece?
+              <br /><br />
+              It’s as if the universe took its time, carefully shaping someone
+              as wonderful as you, just to make the world a little brighter. And
+              trust me, you do. Every single day. 💕
+              <br /><br />
+              Your presence feels like a soft melody, soothing yet
+              unforgettable. The way you carry yourself, the kindness in your
+              heart, and the purity in your soul make you even more special.
+              It’s not just about how beautiful you look—it’s about how
+              beautiful you truly are.
+              <br /><br />
+              Every time I see you, I’m reminded that some things in life are
+              simply magical, and you, without a doubt, are one of them. ✨💖
+            </p>
+          </div>
+          <div class="back">
+            <img src="./img7.jpeg" alt="Img2" />
+          </div>
+        </div>
+        <!-- 4th Page -->
+        <div class="page">
+          <div class="front">
+            <h2>The Best Part of My Day🤞💖</h2>
+            <p>
+              Talking to you has quickly become one of the highlights of my day.
+              Every time I see a message from you, I can’t help but smile—it’s
+              like a little spark of happiness. No matter how my day is going,
+              our conversations make everything feel me happy and brighter.
+              <br /><br />
+              You have a way of making the simplest moments special.
+              <br /><br />
+              It’s not just about how beautiful you are; Your words have a magic
+              that makes me feel at ease, and your presence alone brings joy.
+              <br /><br />
+              I never knew a conversation could mean so much, but with you, it
+              does. 💕
+            </p>
+          </div>
+          <div class="back">
+            <img src="./img3.jpeg" alt="Img 3" />
+          </div>
+        </div>
+        <!-- 5th Page -->
+        <div class="page">
+          <div class="front">
+            <h1>A Wish from the Heart 💫💖</h1>
+            <p>
+              Sometimes, I find myself wishing I could meet you in person, just
+              to see the smile that brightens my day and hear the voice that
+              makes fall for you. Maybe it’s a long shot, but the thought still
+              lingers.
+              <br /><br />
+              Even though we’ve only known each other for a short time, I hope
+              you won’t forget me. Our moments, our conversations—they mean more
+              to me than you might realize.
+              <br /><br />
+              No matter what happens, I truly wish you a life filled with
+              happiness, love, and everything you deserve. 💕
+              <br /><br />
+              You are someone special, and I hope life gives you endless reasons
+              to smile. No matter where we go from here, I’ll always be grateful
+              for the time we’ve shared. And if fate ever allows, maybe one day
+              our paths will cross for real. ✨
+            </p>
+          </div>
+          <div class="back">
+            <h1>Always Here for You 💖✨</h1>
+            <p>
+              I want you to know that I’ll always be here for you, no matter
+              what. If you ever need anything—someone to listen, someone to
+              support you, or just someone to make you smile—I’m just a message
+              away.
+              <br /><br />
+              My time is yours whenever you need it.
+              <br /><br />
+              Life can be unpredictable, but I hope you never feel alone.
+              Whether it’s a good day or a tough one, I’ll always be here to
+              cheer you on, to remind you how amazing you are.
+              <br /><br />
+              You deserve nothing but happiness, and if I can be a small part of
+              that, I’d be honored. No matter where life takes us, just know
+              that you’ll always have someone who cares—someone who truly
+              believes in you. 💕
+            </p>
+          </div>
+        </div>
+        <!-- 6th Page -->
+        <div class="page">
+          <div class="front">
+            <h2>The Beauty of You ✨💖</h2>
+            <p>
+              Can we take a moment to appreciate how effortlessly stunning you
+              look in anything you wear. I can't take eyes of you.
+              <br /><br />
+              You have a presence that turns heads and a charm that captivates
+              hearts.
+              <br /><br />
+              There’s something about you that draws people in—maybe it’s your
+              cuteness or just the way you light up any room you walk into with
+              your smile. Whatever it is, it’s undeniable, and it makes you
+              absolutely perfect in every way.
+              <br /><br />
+              No matter where you are or what you do, you leave a lasting
+              impression. You are not just beautiful—you are extraordinary. 💖✨
+            </p>
+          </div>
+          <div class="back">
+            <h2>Absolutely Breathtaking ✨💖</h2>
+            <p>
+              In everything you wear, you are nothing short of breathtaking.
+              It’s not just about your looks—it’s the way you carry yourself
+              with such confidence and grace that makes you truly mesmerizing.
+              <br /><br />
+              I’m completely in awe of you.
+              <br /><br />
+              Your presence alone can brighten any space, and your energy is
+              simply magnetic. The way you move, the way you smile, and the way
+              you make others feel at ease—it’s all part of your undeniable
+              charm.
+              <br /><br />
+              You don’t just turn heads; you leave lasting impressions. There’s
+              something so effortlessly captivating about you that makes it
+              impossible to look away.
+              <br /><br />
+              You are not just beautiful—you are a work of art, inside and out.
+              💕✨
+            </p>
+          </div>
+        </div>
+        <!-- 7th Page -->
+        <div class="page">
+          <div class="front">
+            <img src="./img6.jpeg" alt="Img6" />
+          </div>
+          <div class="back">
+            <h2>My all time crush ❤️✨</h2>
+            <h2>Thought of you makes my heart beat faster</h2>
+            <h2>You are my Dopamine</h2>
+            <h2>Your curves speak about perfect definition of feminity</h2>
+            <h2>You are Natural beauty</h2>
+          </div>
+        </div>
+        <!-- 8th Page -->
+        <div class="page">
+          <div class="front">
+            <img src="./img1.jpeg" alt="" />
+          </div>
+          <div class="back cover">
+            <h1> Finally Happy Valentines Day</h2>
+            <h3>Cutest Queen Sahaja</h3>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // --- Falling Emoji Generator (for login and loading pages) ---
+      function createFallingEmoji() {
+        const emojis = ["❤️", "💖", "💘", "💕", "💞", "💓", "💗", "😍"];
+        const emoji = document.createElement("div");
+        emoji.classList.add("falling-emoji");
+        emoji.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        emoji.style.left = Math.random() * 100 + "vw";
+        emoji.style.animationDuration = Math.random() * 3 + 2 + "s";
+        document.body.appendChild(emoji);
+        setTimeout(() => emoji.remove(), 5000);
+      }
+      let emojiInterval = setInterval(createFallingEmoji, 500);
+
+      // --- Login Page Logic ---
+      const loginForm = document.getElementById("login-form");
+      const codeInput = document.getElementById("code");
+      const loginResult = document.getElementById("login-result");
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const userInput = codeInput.value.trim();
+        const secretCode = ""; // For demo: any input works (empty secret)
+        if (userInput === secretCode) {
+          loginResult.innerHTML = "Baby";
+          clearInterval(emojiInterval); // Stop falling emojis
+          document.getElementById("page-login").style.display = "none";
+          document.getElementById("page-loading").style.display = "flex";
+        } else {
+          loginResult.innerHTML = "Naa";
+        }
+      });
+
+      // --- Loading Page Logic ---
+      const nextBtn = document.getElementById("next-btn");
+      nextBtn.addEventListener("click", function () {
+        document.getElementById("page-loading").style.display = "none";
+        document.getElementById("page-book").style.display = "flex";
+      });
+
+      // --- Flip-Book Functionality for Book Page ---
+      function flipBook(elBook) {
+        elBook.style.setProperty("--c", 0); // Set current page
+        elBook.querySelectorAll(".page").forEach((page, idx) => {
+          page.style.setProperty("--i", idx);
+          page.addEventListener("click", (evt) => {
+            if (evt.target.closest("a")) return;
+            const curr = evt.target.closest(".back") ? idx : idx + 1;
+            elBook.style.setProperty("--c", curr);
+          });
+        });
+      }
+      document.querySelectorAll(".book").forEach(flipBook);
+    </script>
+  </body>
+</html>
